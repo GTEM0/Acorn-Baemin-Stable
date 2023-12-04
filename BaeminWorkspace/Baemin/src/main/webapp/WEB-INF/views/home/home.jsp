@@ -557,6 +557,27 @@ footer {
 			top: 62%;
 		}
 }
+/* 푸터  ////////////////////////////////////////////////////*/
+footer {
+	width: 97vw;
+	height: 80px;
+	border-top: 1px solid #d9d9d9;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 10px;
+	padding-bottom: 5px;
+	position: fixed;
+	bottom: 0;
+}
+
+p {
+	font-size: 13px;
+	color: #4B4B4B;
+}
+.copyright{
+	width:10px;
+	height: 10px;
+}
 
   /* 작은화면 ///////////////////////////*/
 
@@ -614,6 +635,7 @@ footer {
 		top: 62%;
 	}
 }
+
 </style>
 </head>
 <body style="overflow-x: hidden">
@@ -622,7 +644,7 @@ footer {
 		<div class="header-wrap">
 			<div class="logo">
 				<img class="rider-img" src="${path}/resources/icons/배민캐릭터로고.png">
-				<a href="/baemin/home">배달<span class="small-font">의</span>민족
+				<a href="${path}/home">배달<span class="small-font">의</span>민족
 				</a>
 			</div>
 
@@ -821,9 +843,34 @@ footer {
 
 		</section>
 	</div>
+<footer id=footer>
+	<div class="footer-info-wrap">
+		<p>에이콘아카데미 최종프로젝트 배달의민족 점심뭐먹조</p>
+		<p>곽단야, 김민지, 김현수, 박태민, 표준태</p>
+	</div>
 
-	<%@ include file="../base/footer.jsp"%>
+</footer>
 
+<script>
+	// 문서의 높이를 조절하는 함수
+	function adjustDocumentHeight() {
+		var contentHeight = document.getElementById('content').offsetHeight;
+		var windowHeight = window.innerHeight;
+		var footerHeight = document.getElementById('footer').offsetHeight;
+
+		if (contentHeight + footerHeight < windowHeight) {
+			// 내용이 적을 때
+			document.getElementById('footer').style.position = 'fixed';
+		} else {
+			// 내용이 많을 때
+			document.getElementById('footer').style.position = 'static';
+		}
+	}
+
+	// 페이지 로드 시와 창 크기 변경 시에도 호출
+	window.onload = adjustDocumentHeight;
+	window.onresize = adjustDocumentHeight;
+</script>
 	<!-- 검색 -->
 	<script>
 		function validateForm() {
@@ -838,8 +885,7 @@ footer {
 	</script>
 
 	<!-- 카카오맵-->
-	<script type="text/javascript"
-		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ac76afb73e017bb01fa395c302f99e21&libraries=services"></script>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4a906d923aeadc7ff14b2aa9616f0923&libraries=services"></script>
 	<script>
 		var locPosition;
 
@@ -866,7 +912,7 @@ footer {
 	
 		var container = document.querySelector('.kakao-map-wrap'); //지도를 담을 영역의 DOM 레퍼런스
 		var options = { //지도를 생성할 때 필요한 기본 옵션
-			center : new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+			center : new kakao.maps.LatLng(37.5540539, 126.9206153), //지도의 중심좌표.
 			level : 1
 		//지도의 레벨(확대, 축소 정도)
 		};
@@ -883,22 +929,33 @@ footer {
 		function currentLocation() {
 			// HTML5의 geolocation으로 사용할 수 있는지 확인합니다
 			if (navigator.geolocation) {
+				
+				lat = 37.5540539, // 위도
+				lon = 126.9206153; // 경도 
+				locPosition = new kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+				var message = '<div style="padding:5px; position:relative; bottom:3px;">현위치</div>'; // 인포윈도우에 표시될 내용입니다
+
+				// 마커와 인포윈도우를 표시합니다
+				displayMarker(locPosition, message);
 
 				// GeoLocation을 이용해서 접속 위치를 얻어옵니다
-				navigator.geolocation
-						.getCurrentPosition(function(position) {
+				/* navigator.geolocation.getCurrentPosition(function(position) {
 
-							lat = position.coords.latitude, // 위도
-							lon = position.coords.longitude; // 경도
+							//lat = position.coords.latitude, // 위도
+							//lon = position.coords.longitude; // 경도
+							
+							
+							lat = 37.5540539, // 위도
+							lon = 126.9206153; // 경도 
 
-							// alert("위도: "+lat+" ,경도: "+lon);
+							//alert("위도: "+lat+" ,경도: "+lon);
 
 							locPosition = new kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
 							var message = '<div style="padding:5px; position:relative; bottom:3px;">현위치</div>'; // 인포윈도우에 표시될 내용입니다
 
 							// 마커와 인포윈도우를 표시합니다
 							displayMarker(locPosition, message);
-						});
+						}); */
 			} else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
 
 				locPosition = new kakao.maps.LatLng(37.4812845080678,

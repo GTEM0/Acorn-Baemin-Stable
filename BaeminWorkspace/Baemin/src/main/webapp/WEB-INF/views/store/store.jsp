@@ -37,9 +37,7 @@ section {
 	align-items: center;
 	flex: 7.8;
 	width: 1280px;
-	padding-top: 5%;
-	padding-top: 140px; /* 헤더 높이만큼 padding-top 추가 */
-	margin-bottom: 50px; /* 여분의 여백으로 풋터가 바닥에 유지되도록 설정 */
+	padding-bottom: 50px; /* 여분의 여백으로 풋터가 바닥에 유지되도록 설정 */
 }
 button {
 	outline: none;
@@ -160,6 +158,7 @@ button {
 }
 .info-sub-tab {
 	margin-top: 50px;
+	margin-bottom: 25px;
 }
 .store-description {
 	display: flex;
@@ -254,7 +253,7 @@ button {
 }
 </style>
 <script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5e1731c3f7c3d4a983be89d9de5add7e&libraries=services"></script>
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=882eaf7bb4b6e556ac95cc08a1a01c24&libraries=services"></script>
 <script>
 	$(document).ready(function() {
 		// 삭제된 메뉴는 보이지 않게 처리
@@ -279,10 +278,6 @@ button {
 		$(".menu-tab").css("border-top", "2px solid black").css("border-bottom", "none").css("background-color", "rgb(244,243,243)");
 		$(".info-tab").css("border-top", "none").css("border-bottom", "2px solid black").css("background-color", "white");;
 		$(".review-tab").css("border-top", "none").css("border-bottom", "2px solid black").css("background-color", "white");;
-		
-		
-
-		
 	}
 	
 	// 정보 탭 영역
@@ -291,6 +286,10 @@ button {
 		
 		$(".menu-sub-tab, .store-review-tab").hide();
 		$(".store-info-tab").show();
+		
+		$(".menu-tab").css("border-top", "none").css("border-bottom", "2px solid black").css("background-color", "white");
+		$(".info-tab").css("border-top", "2px solid black").css("border-bottom", "none").css("background-color", "rgb(244,243,243)");
+		$(".review-tab").css("border-top", "none").css("border-bottom", "2px solid black").css("background-color", "white");
 
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	    mapOption = {
@@ -330,9 +329,7 @@ button {
 	    } 
 	});    
 		
-		$(".menu-tab").css("border-top", "none").css("border-bottom", "2px solid black").css("background-color", "white");
-		$(".info-tab").css("border-top", "2px solid black").css("border-bottom", "none").css("background-color", "rgb(244,243,243)");
-		$(".review-tab").css("border-top", "none").css("border-bottom", "2px solid black").css("background-color", "white");
+		
 	}
 	
 	// 리뷰 탭 영역
@@ -345,10 +342,6 @@ button {
 		$(".menu-tab").css("border-top", "none").css("border-bottom", "2px solid black").css("background-color", "white");
 		$(".info-tab").css("border-top", "none").css("border-bottom", "2px solid black").css("background-color", "white");
 		$(".review-tab").css("border-top", "2px solid black").css("border-bottom", "none").css("background-color", "rgb(244,243,243)");
-		
-		
-		
-		
 	}
 	//찜 취소
 	function zzimDelete(zzimSCode,zzimUCode) {
@@ -359,7 +352,7 @@ button {
    		let infos = JSON.stringify(info);
 	    $.ajax({
    			type : "DELETE",
-   			url : "/baemin/zzimClear",
+   			url : "${path}/zzimClear",
    			data : infos,
    			contentType : "application/json", // 필수
    			success : function(data) {
@@ -381,7 +374,7 @@ button {
  	   		let infos = JSON.stringify(info);
    		$.ajax({
    			type : "POST",
-   			url : "/baemin/zzimInsert",
+   			url : "${path}/zzimInsert",
    			data : infos,
    			contentType : "application/json", // 필수
    			success : function(data) {
@@ -395,11 +388,6 @@ button {
 			alert("로그인 후 가능합니다.");
 		}
 	}; 
-	
-	
-	
-
-	
 </script>
 </head>
 <body>
@@ -478,7 +466,7 @@ button {
 													<div class="menuName-wrap">
 														<div class="menuName menuName-bigger">${menuList.menuName}</div>
 															<div class="menuName">${menuList.menuContent}</div>
-															<div class="menuName">${menuList.menuPrice}</div>
+															<div class="menuName">${menuList.menuPrice}원</div>
 													</div>
 												</c:when>
 
@@ -494,11 +482,10 @@ button {
 															<a class="menu-img"
 															href="${path}/option?menuCode=${menuList.menuCode}"><div class="menuName">${menuList.menuContent}</div></a>
 															<a class="menu-img"
-															href="${path}/option?menuCode=${menuList.menuCode}"><div class="menuName">${menuList.menuPrice}</div></a>
+															href="${path}/option?menuCode=${menuList.menuCode}"><div class="menuName">${menuList.menuPrice}원</div></a>
 													</div>
 												</c:when>
 											</c:choose>	
-
 										</div>
 										<hr class="thin-line">
 									</c:when>
@@ -529,7 +516,7 @@ button {
 								</tr>
 								<tr class="store-address">
 									<td class="introduce-small-title">매장주소</td>
-									<td>${readStore.storeAddress}</td>
+									<td>${readStore.storeAddress}+${readStore.storeAddressDetail}</td>
 								</tr>
 								<tr class="seller-regcode">
 									<td class="introduce-small-title">사업자등록번호</td>
@@ -570,15 +557,8 @@ button {
 						<div>사장님</div>
 						<div>${item.answerContent}</div>
 						</c:if>
-						
-						
-						
-						
 					</div>
-
 				</c:forEach>
-
-
 			</div>
 		</div>
 	</section>

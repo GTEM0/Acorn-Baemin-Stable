@@ -25,16 +25,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.acorn.baemin.domain.AnswerDTO;
 import com.acorn.baemin.domain.MenuDTO;
 import com.acorn.baemin.domain.ReviewDTO;
 import com.acorn.baemin.domain.SellerDTO;
 import com.acorn.baemin.domain.StoreDTO;
-import com.acorn.baemin.domain.UserDTO;
 import com.acorn.baemin.home.repository.ZzimRepositoryImp;
 import com.acorn.baemin.domain.ZzimDTO;
 import com.acorn.baemin.seller.service.SellerService;
-import com.acorn.baemin.user.repository.UserRepository;
 
 @Controller
 public class SellerController {
@@ -92,9 +89,10 @@ public class SellerController {
 			String menuContent, String menuClassification, Integer menuStatus)
 			throws IllegalStateException, IOException {
 
-		try {
+		
 			if (!menuImageFile.isEmpty()) {
 				// 이미지 업로드
+				try {
 				String fileName = menuImageFile.getOriginalFilename();
 				String menuRealImage = fileDir + menuName + fileName; // c:\\test\\upload\\고양이.jpg
 				menuImageFile.transferTo(new File(menuRealImage));
@@ -117,12 +115,12 @@ public class SellerController {
 				System.out.println(menu);
 				sc.insertMenu(menu);
 
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("error @insertMenu");
+				}
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("error @insertMenu");
-		}
 		return "seller/store_manage";
 	}
 
@@ -237,14 +235,8 @@ public class SellerController {
 	@GetMapping("/store")
 	public String storeMain(@RequestParam("storeCode") int storeCode, Model model, HttpSession session)
 			throws Exception {
-
-		// 고정 정보 내용
-
-		// 리뷰 평점
-
 		// 리뷰 갯수 카운트
 		int reviewCount = sc.reviewCount(storeCode);
-
 		// 찜
 		Integer userCode = (Integer) session.getAttribute("userCode");
 		System.out.println("userCode=" + userCode);
@@ -261,7 +253,6 @@ public class SellerController {
 		} else {
 			session.setAttribute("ZCheck", 1);
 		}
-
 		// 메뉴 탭
 		System.out.println("storeCode @service: " + storeCode);
 		// 메뉴분류 정보
@@ -269,19 +260,13 @@ public class SellerController {
 		// 메뉴정보
 		List<MenuDTO> readMenuInfo = sc.selectAllMenuInfo(storeCode);
 		System.out.println(readMenuInfo);
-
 		// 가게 정보 탭
 		StoreDTO readStore = sc.selectStore(storeCode);
 		SellerDTO readSeller = sc.selectSeller(readStore.getSellerCode());
 		System.out.println("sellerCode @service : " + readStore.getSellerCode());
-
 		// 리뷰 탭
 		List<ReviewDTO> reviewList = sc.selectAllReview(storeCode);
-		
 		System.out.println("테스트 : " + reviewList);
-		
-		
-
 		// 모델 심기
 		model.addAttribute("readStore", readStore);
 		model.addAttribute("readSeller", readSeller);
@@ -289,7 +274,6 @@ public class SellerController {
 		model.addAttribute("CList", CList);
 		model.addAttribute("RList", reviewList);
 		model.addAttribute("RCount", reviewCount);
-
 		return "store/store";
 	}
 
@@ -318,5 +302,5 @@ public class SellerController {
 	    }
 		return "seller/store_manage";
 	}
-
+	
 }

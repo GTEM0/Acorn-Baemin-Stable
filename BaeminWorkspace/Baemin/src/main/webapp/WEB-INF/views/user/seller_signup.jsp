@@ -336,7 +336,7 @@ td {
 					contentType : "application/json", // 필수
 					success : function(data) {
 						alert("가입축하 q(≧▽≦q)");
-						window.location.href = "http://localhost:8080/baemin/login";
+						window.location.href = "${path}/login";
 					},
 					error : function() {
 						alert("입력한 정보를 확인해주세요.");
@@ -577,24 +577,15 @@ td {
 
 							if (inputCode === code) {
 								$resultMsg.html('인증번호가 일치합니다.');
-								$resultMsg
-										.css('color', 'green');
-								$('#mail-Check-Btn').attr(
-										'disabled', true);
-								$('#sellerEmail1').attr(
-										'readonly', true);
-								$('#sellerEmail2').attr(
-										'readonly', true);
-								$('#sellerEmail2')
-										.attr('onFocus',
-												'this.initialSelect = this.selectedIndex');
-								$('#sellerEmail2')
-										.attr('onChange',
-												'this.selectedIndex = this.initialSelect');
+								$resultMsg.css('color', 'green');
+								$('#mail-Check-Btn').attr('disabled', true);
+								$('#sellerEmail1').attr('readonly', true);
+								$('#sellerEmail2').attr('readonly', true);
+								$('#sellerEmail2').attr('onFocus','this.initialSelect = this.selectedIndex');
+								$('#sellerEmail2').attr('onChange','this.selectedIndex = this.initialSelect');
 								mailCheck = 1;
 							} else {
-								$resultMsg
-										.html('인증번호가 불일치 합니다. 다시 확인해주세요!.');
+								$resultMsg.html('인증번호가 불일치 합니다. 다시 확인해주세요!.');
 								$resultMsg.css('color', 'red');
 								mailCheck = 0;
 							}
