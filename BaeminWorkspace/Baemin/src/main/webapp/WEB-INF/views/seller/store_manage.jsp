@@ -279,6 +279,11 @@ textarea {
 	display: flex;
 }
 
+.total-address {
+	display: flex;
+	flex-direction: column;
+}
+
 .seller-regcode {
 	display: flex;
 }
@@ -631,11 +636,9 @@ hr {
 	function submitReply(button) {
 	      // Get the review code from somewhere (e.g., a hidden input field)
 	     
-	     
 	     var reviewCode = $(button).siblings("input[name='reviewCode']").val();
 	     var answerContent = $(button).siblings("#replyContent").val();
-	     
-	     
+	   
 	      $.ajax({
 	         type: "POST",
 	         url: "${path}/submitAnswer",
@@ -654,9 +657,6 @@ hr {
 	         error: function () {
 	            console.error("답글 등록 실패!");
 	         }
-	         
-	         
-	         
 	      });
 	   }
 
@@ -798,10 +798,10 @@ hr {
 								<input type="text" id="seller-name" value="" readonly>
 							</div>
 							<div class="store-address">
-								<div>매장주소</div>
-								<input type="text" id="store-address" value=""><br/>
-							</div>
+								<div class="total-address">매장주소</div>
+								<input type="text" id="store-address" value="">
 								<input type="text" id="store-detail-address" value="">
+							</div>
 							<div class="seller-regcode">
 								<div>사업자등록번호</div>
 								<input type="text" id="seller-regCode" value="" readonly>
@@ -813,8 +813,7 @@ hr {
 					onclick="modifyStoreInfo(${readStore.storeCode}, this)">수정하기</button>
 			</div>
 		</div>
-		
-		
+		<!-- 리뷰 탭 -->
 		<div class="store-review-tab">
 			
 			<c:forEach var="item" items="${reviewList}">
@@ -859,7 +858,6 @@ hr {
 					</div>
 				</div>
 			</c:forEach>
-
 		</div>
 		
 	</section>
