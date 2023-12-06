@@ -283,6 +283,10 @@ textarea {
 	display: flex;
 	flex-direction: column;
 }
+.total-address>input {
+	width: 319px;
+	margin-bottom: 15px;
+}
 
 .seller-regcode {
 	display: flex;
@@ -372,6 +376,7 @@ hr {
 
 .user-star-wrap {
 	display: flex;
+	align-items:center;
 }
 
 .review-image {
@@ -835,8 +840,9 @@ hr {
 					<div>${item.reviewContent}</div>
 
 					<c:if test="${not empty item.reviewImageName}">
+
 						<img class="review-image"
-							src="$/baemin/reviewImages/${item.reviewImageName}"
+							src="/baemin/reviewImages/${item.reviewImageName}"
 							alt="Review Image">
 					</c:if>
 
