@@ -4,25 +4,38 @@
 
 <mapper namespace="com.acorn.LoginMapper">
 
+	<!-- 비밀번호 업데이트 -->
+	<update id="updatePassword" parameterType="UserDTO">
+		UPDATE user_tbl
+		SET
+		hashedPassword = #{hashedPassword}
+		WHERE userId = #{userId}
+	</update>
+
 	<!-- 손님 아이디 찾기 -->
-	<select id="findCustomerId" resultType="UserDTO" parameterType="map">
+	<select id="findCustomerId" resultType="UserDTO"
+		parameterType="map">
 		select userId
 		from user_tbl
-		where userEmail = #{userEmail} and userStatus = 1
+		where userEmail = #{userEmail}
+		and userStatus = 1
 	</select>
 
 	<!-- 사장님 아이디 찾기 -->
-	<select id="findSellerId" resultType="SellerDTO" parameterType="map">
+	<select id="findSellerId" resultType="SellerDTO"
+		parameterType="map">
 		select sellerId
 		from seller_tbl
-		where sellerEmail =	#{sellerEmail} and sellerStatus = 1
+		where sellerEmail =
+		#{sellerEmail} and sellerStatus = 1
 	</select>
 
 	<!-- 손님 비밀번호 찾기 -->
 	<select id="finduserPw" resultType="UserDTO">
 		select userPw
 		from user_tbl
-		where userId = #{userId} and userEmail = #{userEmail} and userStatus = 1
+		where userId = #{userId} and userEmail = #{userEmail} and userStatus =
+		1
 	</select>
 
 	<!-- 사장님 비밀번호 찾기 -->
@@ -30,7 +43,8 @@
 		select sellerPw
 		from
 		seller_tbl
-		where sellerId = #{sellerId} and sellerEmail = #{sellerEmail} and sellerStatus = 1
+		where sellerId = #{sellerId} and sellerEmail =
+		#{sellerEmail} and sellerStatus = 1
 	</select>
 
 	<!-- 손님 비밀번호 초기화 -->
@@ -40,8 +54,7 @@
 		WHERE userId = (
 		SELECT userId
 		FROM user_tbl
-		WHERE userEmail = #{userEmail} 
-		)
+		WHERE userEmail = #{userEmail})
 	</update>
 
 	<!-- 사장님 비밀번호 초기화 -->
@@ -52,20 +65,31 @@
 		select sellerId
 		FROM
 		seller_tbl
-		WHERE sellerEmail = #{sellerEmail}
-		)
+		WHERE sellerEmail = #{sellerEmail})
 	</update>
 
 	<!-- 손님 회원 가입 -->
 	<insert id="customerSignup" parameterType="UserDTO">
 		insert into user_tbl
-		(userId, userPw, userName, userNickname, userPhone, userEmail,
+		(userId, hashedPassword, userName, userNickname, userPhone, userEmail,
 		userBirth, userGender, userPostCode, userAddress, userAddressDetail)
 		values
-		(#{userId}, #{userPw}, #{userName}, #{userNickname},
+		(#{userId}, #{hashedPassword}, #{userName}, #{userNickname},
 		#{userPhone}, #{userEmail}, #{userBirth}, #{userGender},
 		#{userPostCode}, #{userAddress}, #{userAddressDetail})
 	</insert>
+
+
+
+	<!-- <insert id="customerSignup" parameterType="UserDTO"> -->
+	<!-- insert into user_tbl -->
+	<!-- (userId, userPw, userName, userNickname, userPhone, userEmail, -->
+	<!-- userBirth, userGender, userPostCode, userAddress, userAddressDetail) -->
+	<!-- values -->
+	<!-- (#{userId}, #{userPw}, #{userName}, #{userNickname}, -->
+	<!-- #{userPhone}, #{userEmail}, #{userBirth}, #{userGender}, -->
+	<!-- #{userPostCode}, #{userAddress}, #{userAddressDetail}) -->
+	<!-- </insert> -->
 
 	<!-- 사장님 회원 가입 -->
 	<insert id="sellerSignup" parameterType="SellerDTO">
@@ -82,8 +106,15 @@
 	<select id="selectUserById" resultType="UserDTO"
 		parameterType="UserDTO">
 		select * from user_tbl where userId = #{userId} and
-		userPw = #{userPw} and userStatus = 1
+		userStatus = 1
 	</select>
+
+
+	<!-- <select id="selectUserById" resultType="UserDTO" -->
+	<!-- parameterType="UserDTO"> -->
+	<!-- select * from user_tbl where userId = #{userId} and -->
+	<!-- userPw = #{userPw} and userStatus = 1 -->
+	<!-- </select> -->
 
 	<!-- 사장님 로그인 -->
 	<select id="selectSellerById" resultType="SellerDTO"
@@ -137,7 +168,7 @@
 		#{sellerRegCode}
 		where sellerCode = #{sellerCode}
 	</update>
-	
+
 	<!-- 손님 회원 탈퇴 -->
 	<update id="signoutuser" parameterType="int">
 		update user_tbl
@@ -231,6 +262,7 @@
 
 	</update>
 
+	<!--  -->
 	<select id="findUserById" parameterType="java.lang.String"
 		resultType="UserDTO">
 		select * FROM user_tbl WHERE userId = #{userId}
@@ -241,38 +273,45 @@
 		select * FROM user_tbl WHERE userEmail = #{userEmail}
 	</select>
 
-	<update id="updatePassword" parameterType="UserDTO">
-		UPDATE user_tbl
-		SET
-		userPw = #{userPw}
-		WHERE userId = #{userId}
-	</update>
+<!-- 	<update id="updatePassword" parameterType="UserDTO"> -->
+<!-- 		UPDATE user_tbl -->
+<!-- 		SET -->
+<!-- 		userPw = #{userPw} -->
+<!-- 		WHERE userId = #{userId} -->
+<!-- 	</update> -->
 
 
 
-<!-- 카카오 api에서 받아온 정보가 db에 있는지 확인 -->
-	<select id="findKakao" parameterType="java.util.HashMap" resultType="UserDTO">
-		SELECT * 
-		FROM user_tbl 
-		WHERE userEmail=#{email} AND userPhone=#{phoneNumber}
+	<!-- 카카오 api에서 받아온 정보가 db에 있는지 확인 -->
+	<select id="findKakao" parameterType="java.util.HashMap"
+		resultType="UserDTO">
+		SELECT *
+		FROM user_tbl
+		WHERE userEmail=#{email} AND
+		userPhone=#{phoneNumber}
 	</select>
 
-<!-- 없다면 유저정보 insert -->
+	<!-- 없다면 유저정보 insert -->
 	<insert id="kakaoInsert" parameterType="java.util.HashMap">
-		INSERT INTO user_tbl (userEmail, userPhone, userAddress, userAddressDetail)
+		INSERT INTO user_tbl
+		(userEmail, userPhone, userAddress, userAddressDetail)
 		VALUES(#{email}, #{phoneNumber}, #{baseAddress}, #{detailAddress})
 	</insert>
-	
-<!-- UserDTO의 정보가 address_tbl에 있는지 확인 -->
-	<select id="findAddrInfo" parameterType="UserDTO" resultType="AddressDTO">
-		SELECT * 
-		FROM address_tbl 
-		WHERE userCode=#{userCode} AND deliveryAddress=#{userAddress}
+
+	<!-- UserDTO의 정보가 address_tbl에 있는지 확인 -->
+	<select id="findAddrInfo" parameterType="UserDTO"
+		resultType="AddressDTO">
+		SELECT *
+		FROM address_tbl
+		WHERE userCode=#{userCode} AND
+		deliveryAddress=#{userAddress}
 	</select>
-	
-<!-- 없다면 주소정보 insert -->
+
+	<!-- 없다면 주소정보 insert -->
 	<insert id="addressInsert" parameterType="UserDTO">
-		INSERT INTO address_tbl (userCode, deliveryAddress, detailDeliveryAddress)
-		VALUES(#{userCode}, #{deliveryAddress}, #{detailDeliveryAddress})
+		INSERT INTO address_tbl
+		(userCode, deliveryAddress, detailDeliveryAddress)
+		VALUES(#{userCode},
+		#{deliveryAddress}, #{detailDeliveryAddress})
 	</insert>
 </mapper>

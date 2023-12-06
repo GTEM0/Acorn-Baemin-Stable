@@ -275,6 +275,7 @@
 </style>
 
 <script>
+// 내정보 수정 함수
 function updatecustomer() {
 		console.log("Update button clicked");	
 		    let userCode = $('#userInfo').val();
@@ -310,6 +311,7 @@ function updatecustomer() {
 		            };
 		            let infos = JSON.stringify(info);
 		
+		            //에이젝스로 컨트롤러에 보냄
 		            $.ajax({
 		                type: 'POST',
 		                url: '${path}/updateUserInfo',

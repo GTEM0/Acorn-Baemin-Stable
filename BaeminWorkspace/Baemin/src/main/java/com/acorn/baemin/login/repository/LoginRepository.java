@@ -52,14 +52,13 @@ public class LoginRepository implements LoginRepositoryI {
 
 	// 손님 로그인
 	@Override
-	public UserDTO login(String userId, String userPw) {
-		System.out.println(userId + userPw);
+	public UserDTO login(String userId, String hashedPassword) {
+		System.out.println(userId + hashedPassword);
 		UserDTO user = new UserDTO();
 		user.setUserId(userId);
-		user.setUserPw(userPw);
 		System.out.println("select" + user);
 		UserDTO result = session.selectOne(namespace + "selectUserById", user);
-		System.out.println("result" + result);
+		System.out.println("result9" + result);
 		return result;
 	}
 

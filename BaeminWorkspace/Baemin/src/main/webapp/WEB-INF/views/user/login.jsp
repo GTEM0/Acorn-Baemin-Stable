@@ -168,7 +168,7 @@ a {
 
 <body>
 	<script>
-	// 로그인 클릭 시 radio 조건 체크
+	// radio 기본 손님 체크
 	function login() {
     const logintypes = document.getElementsByName("logintype");
     let selectedLogintype = null;
@@ -180,6 +180,8 @@ a {
         }
     }
 
+    // 라디오 선택 유형이 customer일시 login(손님)으로 보냄
+    // 라디오 선택 유형이 seller일시 login2(사장님)으로 보냄
 	    if (selectedLogintype) {
 	        const form = document.getElementById("loginForm");
 	        if (selectedLogintype === "customer") {
@@ -201,9 +203,9 @@ document.addEventListener("DOMContentLoaded", function() {
 	
 	form.addEventListener("submit", function(event) {
         const userId = document.getElementsByName("userId")[0].value;
-        const userPw = document.getElementsByName("userPw")[0].value;
+        const hashedPassword = document.getElementsByName("hashedPassword")[0].value;
 
-        if (userId === "" || userPw === "") {
+        if (userId === "" || hashedPassword === "") {
             event.preventDefault();
             alert("로그인에 실패했습니다. 입력 정보를 확인해주세요.");
         }
@@ -280,7 +282,7 @@ document.addEventListener('keydown', function(e) {
 				</div>
 
 				<span></span> <input type="text" name="userId" placeholder="아이디" class="vertical-center"> <br> 
-				<span></span> <input type="password" name="userPw" placeholder="비밀번호" class="vertical-center"> <br>
+				<span></span> <input type="password" name="userpw" placeholder="비밀번호" class="vertical-center"> <br>
 
 				<!-- 아이디 저장 (Remember Me) 체크박스 -->
 				<!-- <label class="remember-me"> <input type="checkbox"

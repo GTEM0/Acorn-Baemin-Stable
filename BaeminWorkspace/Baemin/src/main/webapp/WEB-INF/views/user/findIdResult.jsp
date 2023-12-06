@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="path" value="<%=request.getContextPath()%>"></c:set>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>아이디 찾기 결과</title>
+<meta charset="UTF-8">
+<title>아이디 찾기 결과</title>
 <style>
-    .findIdResult-form {
+.findIdResult-form {
 	background-color: #fff;
 	padding: 20px;
 	max-width: 350px;
@@ -20,12 +20,15 @@
 	position: absolute;
 	top: 250px;
 }
-a{
+
+a {
 	text-style: none;
 }
-.findIdResult-title{
-	text-align: center;	
+
+.findIdResult-title {
+	text-align: center;
 }
+
 input[type="button"] {
 	font-weight: bolder;
 	font-size: 20px;
@@ -44,40 +47,40 @@ input[type="button"] {
 </head>
 <jsp:include page="../base/header_login.jsp" />
 <body>
-    <!-- 아이디찾기 폼 -->
-	<form class="findIdResult-form" 
-		id="findId-form">
-
+	<!-- 아이디찾기 폼 -->
+	<form class="findIdResult-form" id="findId-form">
 
 		<div class="findIdResult-title">
 			<h1>아이디 찾기 결과</h1>
-			<br>			
+			<br>
 		</div>
-		
-    <p id="customerId" style="display: none;">손님 아이디 : ${customerId}</p>
-    <p id="sellerId" style="display: none;">사장님 아이디: ${sellerId}</p>
-    <div><a href="${path}/findPwForm">비밀번호 찾기</a></div>
-    
-</form>
-    <script>
-        let customerId = "${customerId}";
-        let sellerId = "${sellerId}";
 
-        // 결과를 보여줄 요소 선택
-        let customerElement = document.getElementById("customerId");
-        let sellerElement = document.getElementById("sellerId");
+		<p id="customerId" style="display: none;">손님 아이디 : ${customerId}</p>
+		<p id="sellerId" style="display: none;">사장님 아이디: ${sellerId}</p>
+		<div>
+			<a href="${path}/findPwForm">비밀번호 찾기</a>
+		</div>
 
-        // customerId가 존재하면 해당 요소 보이기
-        if (customerId && customerId.length > 0) {
-            customerElement.style.display = "block";
-        }
+	</form>
+	<script>
+		let customerId = "${customerId}";
+		let sellerId = "${sellerId}";
 
-        // sellerId가 존재하면 해당 요소 보이기
-        if (sellerId && sellerId.length > 0) {
-            sellerElement.style.display = "block";
-        }
-    </script>
-    
-    
+		// 결과를 보여줄 요소 선택
+		let customerElement = document.getElementById("customerId");
+		let sellerElement = document.getElementById("sellerId");
+
+		// customerId가 존재하면 해당 요소 보이기
+		if (customerId && customerId.length > 0) {
+			customerElement.style.display = "block";
+		}
+
+		// sellerId가 존재하면 해당 요소 보이기
+		if (sellerId && sellerId.length > 0) {
+			sellerElement.style.display = "block";
+		}
+	</script>
+
+
 </body>
 </html>

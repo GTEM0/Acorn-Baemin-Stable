@@ -22,6 +22,7 @@ import com.acorn.baemin.domain.UserDTO;
 import com.acorn.baemin.home.repository.AddressRepositoryImp;
 import com.acorn.baemin.user.repository.UserRepositoryI;
 import com.acorn.baemin.user.service.MailSendService;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Controller
 public class UserController {
@@ -170,7 +171,7 @@ public class UserController {
 		String storedPassword = rep.getPasswordByUserId(userId);
 
 		if (storedPassword != null && storedPassword.equals(encryptPassword(password))) {
-			return ResponseEntity.ok("Password Matched");
+			return ResponseEntity.ok("비밀번호 일치");
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호 불일치");
 		}
@@ -249,17 +250,28 @@ public class UserController {
 		return "user/seller_signup";
 	}
 
+	
+	 // 회원가입 시 비밀번호 암호화하여 저장하는 메서드
+    private String hashPassword(String plainTextPassword) {
+        // 10은 암호화 강도를 나타내는 값으로, 필요에 따라 조정할 수 있습니다.
+        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+    }
+    
 	// 손님 회원 가입 이메일 자르기
 	@ResponseBody
 	@RequestMapping(value = "/customer_signup", method = RequestMethod.POST)
 	public void insertUserSignup(@RequestBody UserDTO user) {
-		System.out.println("dfdfd" + user);
+		System.out.println("customer info"+ user);
 		String email = user.getUserEmail(); // .com.com
 		int index = email.lastIndexOf('.');
 		if (index != -1) {
 			email = email.substring(0, index);
 		}
 		user.setUserEmail(email);
+		
+		// 비밀번호 해싱하여 저장
+        String hashedPassword = hashPassword( user.getUserPw());   // test123!   =>  
+        user.setHashedPassword(hashedPassword);
 		rep.insertCustomer(user);
 	}
 

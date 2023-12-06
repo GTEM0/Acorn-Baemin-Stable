@@ -29,13 +29,12 @@ public interface LoginRepositoryI {
 	public String logout();
 
 	// 손님 로그인
-	UserDTO login(String userId, String userPw);
+	UserDTO login(String userId, String hashedPassword);
 
 	// 사장님 로그인
 	SellerDTO loginseller(String sellerId, String sellerPw);
 
 	// 아이디 비번 찾기
-
 	UserDTO findUserById(String userId);
 
 	UserDTO findUserByEmail(String userEmail);

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ import com.acorn.baemin.home.repository.AddressRepositoryImp;
 import com.acorn.baemin.login.repository.LoginRepository;
 import com.acorn.baemin.login.repository.LoginRepositoryI;
 import com.acorn.baemin.login.service.LoginService;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Controller
 public class LoginController {
@@ -36,10 +38,13 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
-	
+
 	@Autowired
 	private HttpSession session;
-	
+
+//	@Autowired
+//	private BCryptPasswordEncoder passwordEncoder;
+
 	// 유저 아이디 찾기 보내기
 	@GetMapping("/findIdForm")
 	public String findIdForm() {
@@ -85,43 +90,40 @@ public class LoginController {
 		return "user/findPwResult";
 	}
 
-
-
 	// 카카오 간편 로그인
-	@GetMapping(value="/kakaoLogin")
+	@GetMapping(value = "/kakaoLogin")
 	public String kakaoLogin(@RequestParam(value = "code", required = false) String code) throws Exception {
 		System.out.println("code : " + code);
-			
+
 		String access_Token = loginService.getAccessToken(code);
 		System.out.println(" access_Token @LoginController : " + access_Token);
-			
+
 		UserDTO userInfo = loginService.getUserInfoAndAddress(access_Token);
-		System.out.println("LoginController : " +  userInfo );
-			
+		System.out.println("LoginController : " + userInfo);
+
 		System.out.println("phoneNumber : " + userInfo.getUserPhone());
 		System.out.println("email : " + userInfo.getUserEmail());
 		System.out.println("baseAddress : " + userInfo.getUserAddress());
 		System.out.println("detailAddress : " + userInfo.getUserAddressDetail());
 
-	    AddressDTO addrInfo = loginService.findAndInsertAddrInfo(userInfo);
-	    
-	    int addressCode = addrInfo.getAddressCode();
-	    System.out.println("addressCode @LoginController : " + addressCode);
+		AddressDTO addrInfo = loginService.findAndInsertAddrInfo(userInfo);
 
-	    // session에 담긴 정보를 초기화.
-	    session.invalidate();
-	    // session에 userCode와 addressCode 담기
-	    session.setAttribute("userCode", userInfo.getUserCode());
-	    session.setAttribute("addressCode", addressCode);
+		int addressCode = addrInfo.getAddressCode();
+		System.out.println("addressCode @LoginController : " + addressCode);
+
+		// session에 담긴 정보를 초기화.
+		session.invalidate();
+		// session에 userCode와 addressCode 담기
+		session.setAttribute("userCode", userInfo.getUserCode());
+		session.setAttribute("addressCode", addressCode);
 		// 리턴값은 용도에 맞게 변경
 		return "redirect:/home";
 	}
 
-	
 	// 유저 로그인 보내기
 	@GetMapping("/login")
 	public String login(HttpSession session) {
-		String result = "user/login";
+		String result7 = "user/login";
 		String user = (String) session.getAttribute("user");
 		Integer userCode = (Integer) session.getAttribute("userCode");
 		System.out.println(user);
@@ -129,40 +131,59 @@ public class LoginController {
 		if (user != null || userCode != null) {
 			return "redirect:/home";
 		} else {
-			return result;
+			return result7;
 		}
 	}
 
 	// 손님 로그인 입력 정보 받아오기
 	@PostMapping("/login")
-	public String processLogin(String userId, String userPw, Model model, String logintype, HttpSession session) {
-		System.out.println(userId + userPw + logintype);
-		try {
-			UserDTO user = loginService.loginCustomer(userId, userPw);
-			int status = user.getUserStatus();
-			///////////////// 주소
-			int addressCount = addressDAO.selectAddressCount(user.getUserCode());
+	public String processLogin(@RequestParam String userId, @RequestParam String userpw, Model model,
+			String logintype, HttpSession session) {
 
-			if(addressCount == 0 ) {
-				addressDAO.loginInsertAddress(new AddressDTO(0, user.getUserCode(), user.getUserAddress(), user.getUserAddressDetail(), 2));
-			}else {
-				System.out.println("주소값이 이미 있습니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
-			}
-			// 주소코드 가져와서 세션에 넣기
-			int addressCode = addressDAO.lastOrderAddressCode(user.getUserCode());
-			session.setAttribute("addressCode", addressCode);
-			///////////////////////////////////
-			if (user != null && status == 1) {
+			UserDTO user = null;
+		try {
+			user = loginService.loginCustomer(userId, userpw);
+			System.out.println(" user INFO =" + user);
+			if (user != null && user.getUserStatus() == 1) {
+
+				// 주소 정보 확인 및 추가
+				int addressCount = addressDAO.selectAddressCount(user.getUserCode());
+
+				if (addressCount == 0) {
+					addressDAO.loginInsertAddress(new AddressDTO(0, user.getUserCode(), user.getUserAddress(),
+							user.getUserAddressDetail(), 2));
+				} else {
+					System.out.println("주소값이 이미 있습니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+				}
+
+				// 주소코드를 가져와서 세션에 넣기
+				int addressCode = addressDAO.lastOrderAddressCode(user.getUserCode());
+				session.setAttribute("addressCode", addressCode);
+				
+				// 저장된 해시된 비밀번호를 가져옴
+				String storedPassword = user.getHashedPassword();
+				// 입력된 비밀번호를 BCrypt로 해싱하여 저장된 비밀번호와 비교				 
+				
+				// 세션에 유저 정보 저장
 				session.setAttribute("userCode", user.getUserCode());
 				session.setAttribute("user", user.getUserId());
-				return "redirect:/home";
+				
+				if (BCrypt.checkpw(userpw, user.getHashedPassword())) {
+					// 로그인 성공
+					return "redirect:/home";
+				} else {
+					// 로그인 실패
+					model.addAttribute("message", "로그인 실패. 비번실패");
+					return "user/login";
+				}
+
 			} else {
-				model.addAttribute("message", "로그인 실패. 로그인 유형과 계정 정보를 확인해주세요.");
+				model.addAttribute("message", "로그인 실패. 로그인 유형과 계정 정보를 확인해주세요2.");
 				return "user/login";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			model.addAttribute("message", "로그인 실패. 로그인 유형과 계정 정보를 확인해주세요.");
+			model.addAttribute("message", "로그인 중 오류가 발생했습니다.");
 			return "user/login";
 		}
 	}
@@ -170,26 +191,25 @@ public class LoginController {
 	// 사장님 로그인 입력 정보 받아오기
 	@PostMapping("/login2")
 	public String processLogin2(String userId, String userPw, Model model, String logintype, HttpSession session) {
-	    SellerDTO seller = loginService.loginSeller(userId, userPw);
+		SellerDTO seller = loginService.loginSeller(userId, userPw);
 
-	    if (seller != null) {
-	    	int status = seller.getSellerStatus();
-	        System.out.println("status" + status);
+		if (seller != null) {
+			int status = seller.getSellerStatus();
+			System.out.println("status" + status);
 
-	        if (status == 1) {
-	            int sellerCode = seller.getSellerCode();
-	            session.setAttribute("user", sellerCode);
-	            return "redirect:/sellerHome?sellerCode=" + sellerCode;
-	        } else {
-	            model.addAttribute("message", "로그인 실패. 로그인 유형과 계정 정보를 확인해주세요.");
-	            return "user/login";
-	        }
-	    } else {
-	        model.addAttribute("message", "로그인 실패. 로그인 유형과 계정 정보를 확인해주세요.");
-	        return "user/login";
-	    }
+			if (status == 1) {
+				int sellerCode = seller.getSellerCode();
+				session.setAttribute("user", sellerCode);
+				return "redirect:/sellerHome?sellerCode=" + sellerCode;
+			} else {
+				model.addAttribute("message", "로그인 실패. 로그인 유형과 계정 정보를 확인해주세요.");
+				return "user/login";
+			}
+		} else {
+			model.addAttribute("message", "로그인 실패. 로그인 유형과 계정 정보를 확인해주세요.");
+			return "user/login";
+		}
 	}
-
 
 	// 유저 로그아웃
 	@GetMapping("/logout")

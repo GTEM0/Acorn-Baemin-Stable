@@ -10,6 +10,7 @@ public class UserDTO {
 
 	int userCode;
 	String userId;
+	String hashedPassword;
 	String userPw;
 	String userName;
 	String userNickname;

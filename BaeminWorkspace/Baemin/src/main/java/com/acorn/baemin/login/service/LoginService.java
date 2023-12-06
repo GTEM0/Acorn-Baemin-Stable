@@ -26,6 +26,7 @@ public class LoginService {
 
 	@Autowired
 	private LoginRepository loginRepository;
+	
 	// 카카오 로그인 api 토큰 받아오기
 	public String getAccessToken (String authorize_code) {
 
@@ -218,10 +219,11 @@ public class LoginService {
 	}
 	
 	// 손님 로그인
-	public UserDTO loginCustomer(String userId, String userPw) {
+	public UserDTO loginCustomer(String userId, String hashedPassword) {
 		try {
-			return loginRepository.login(userId, userPw);
-
+			System.out.println("시스템" + userId+ hashedPassword);
+			return loginRepository.login(userId, hashedPassword);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

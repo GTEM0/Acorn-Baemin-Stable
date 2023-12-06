@@ -15,19 +15,31 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 	</properties>
 	<dependencies>
-  <!-- 이메일 인증 dependency -->
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-context-support</artifactId>
-         <version>${org.springframework-version}</version>
-      </dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.springframework.security</groupId> -->
+<!-- 			<artifactId>spring-security-core</artifactId> -->
+<!-- 			<version>5.0.7.RELEASE</version> 현재 버전에 맞게 업데이트 -->
+<!-- 		</dependency> -->
+		<dependency>
+			<groupId>org.mindrot</groupId>
+			<artifactId>jbcrypt</artifactId>
+			<version>0.4</version>
+		</dependency>
 
-   <dependency>
-    <groupId>com.sun.mail</groupId>
-    <artifactId>javax.mail</artifactId>
-    <version>1.6.2</version> <!-- 최신 버전에 맞게 업데이트해 주세요 -->
-</dependency>
-		
+		<!-- 이메일 인증 dependency -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
+		<!-- 이메일 인증 dependency -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.2</version> <!-- 최신 버전에 맞게 업데이트해 주세요 -->
+		</dependency>
+
 
 		<!-- 파일업로드하는 -->
 		<dependency>
@@ -43,9 +55,9 @@
 
 		<!-- Spring -->
 		<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-context-support</artifactId>
-		<version>${org.springframework-version}</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${org.springframework-version}</version>
 		</dependency>
 
 		<dependency>
@@ -222,11 +234,11 @@
 		</dependency>
 
 
-<dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
-    <version>2.8.5</version>
-</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.5</version>
+		</dependency>
 
 
 
